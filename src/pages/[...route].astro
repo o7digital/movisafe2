@@ -1,0 +1,13 @@
+---
+import Home from '../components/Home.astro';
+import Service from '../components/Service.astro';
+import {languages,home,serviceIds,servicePath} from '../data/content';
+export function getStaticPaths() {
+  return languages.flatMap(lang => [
+    {params:{route:home(lang).slice(1,-1)||undefined},props:{lang,index:-1}},
+    ...serviceIds.map((_,index)=>({params:{route:servicePath(lang,index).slice(1,-1)},props:{lang,index}}))
+  ]);
+}
+const {lang,index}=Astro.props;
+---
+{index<0?<Home {lang}/>:<Service {lang} {index}/>}

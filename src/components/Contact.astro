@@ -1,0 +1,11 @@
+---
+import { copy, type Lang } from '../data/content';
+import Icon from './Icon.astro';
+interface Props {lang: Lang; subject?: string}
+const {lang,subject}=Astro.props,t=copy[lang];
+const email='mailto:contacto@movisafe.com?subject='+encodeURIComponent(subject?t.emailSubject+' · '+subject:t.emailSubject);
+---
+<section id="contacto" class="contact"><div class="wrap contact-grid">
+  <div><p class="label on-dark">{t.contactLabel}</p><h2>{t.contactTitle[0]} <em>{t.contactTitle[1]}</em></h2><p class="contact-copy">{t.contactText}</p><a class="button primary" href={email}><Icon name="mail" size={18} />{t.write}</a></div>
+  <address><strong>{t.location}</strong><span>Boulevard de Popocatépetl 285<br />Los Pirules, 54040 Tlalnepantla de Baz<br />Estado de México</span><a href="tel:+525555769027">+52 55 5576 9027</a><a href="tel:+525589349750">+52 55 8934 9750</a><a href={email}>contacto@movisafe.com</a><small>{t.hours}</small></address>
+</div></section>

@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { copy, home, languages, servicePath, type Lang } from '../data/content';
+import '../styles/site.css';
+interface Props {lang: Lang; serviceIndex?: number}
+const {lang,serviceIndex}=Astro.props;
+const t=copy[lang];
+const page=(l:Lang)=>serviceIndex===undefined?home(l):servicePath(l,serviceIndex);
+const title=serviceIndex===undefined?({es:'Movisafe | Seguridad integral en México',en:'Movisafe | Integrated security in Mexico',fr:'Movisafe | Sécurité globale au Mexique'})[lang]:t.services[serviceIndex].name+' | Movisafe';
+const links=['soluciones','empresa','clientes'];
+const languageNames={es:'Español',en:'English',fr:'Français'};
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta name="theme-color" content="#11191a" />
+    <title>{title}</title><meta name="description" content={serviceIndex===undefined?t.meta:t.services[serviceIndex].short} /><meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" href="/media/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="font" href="/fonts/instrument-serif.woff2" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <a class="skip" href="#main">{t.skip}</a>
+    <header class="top"><div class="wrap navrow">
+      <a class="brand" href={home(lang)} aria-label={'Movisafe · '+t.start}><img src="/media/movisafe.svg" width="145" height="51" alt="Movisafe" /></a>
+      <nav class="desktoplinks" aria-label={t.menu}>{t.nav.map((label,i)=><a href={home(lang)+'#'+links[i]}>{label}</a>)}</nav>
+      <div class="navtools">
+        <details class="langdrop dropdown"><summary aria-label={t.language}><Icon name="globe" size={17} /><span>{lang.toUpperCase()}</span><Icon name="down" size={13} /></summary><div class="dropmenu">{languages.map(l=><a lang={l} hreflang={l} href={page(l)} aria-current={l===lang?'page':undefined}>{languageNames[l]}</a>)}</div></details>
+        <a class="header-cta" href={home(lang)+'#contacto'}>{t.contact}</a>
+        <details class="mobmenu dropdown"><summary aria-label={t.menu}><Icon name="menu" size={25} /></summary><nav class="dropmenu" aria-label={t.menu}>{t.nav.map((label,i)=><a href={home(lang)+'#'+links[i]}>{label}</a>)}<a href={home(lang)+'#contacto'}>{t.contact}</a></nav></details>
+      </div>
+    </div></header>
+    <slot />
+    <footer><div class="wrap foot"><a class="brand" href={home(lang)} aria-label={'Movisafe · '+t.start}><img width="117" height="41" src="/media/movisafe.svg" alt="Movisafe" /></a><nav><a href="https://movisafe.com/blog/">{t.news}</a><a href="https://movisafe.com/nuestro-equipo/">{t.careers}</a><a href="https://movisafe.com/aviso-de-privacidad/">{t.privacy}</a></nav><small>© Movisafe</small></div></footer>
+    <script>
+      const menus = [...document.querySelectorAll<HTMLDetailsElement>('details.dropdown')];
+      const close = () => menus.forEach(menu => menu.open=false);
+      menus.forEach(menu => menu.addEventListener('toggle', () => {
+        if (menu.open) menus.filter(other=>other!==menu).forEach(other=>other.open=false);
+      }));
+      document.addEventListener('click', e => {
+        if (e.target instanceof Element && (!e.target.closest('.dropdown') || e.target.closest('.dropmenu a'))) close();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key==='Escape') { const menu=menus.find(m=>m.open); close(); menu?.querySelector('summary')?.focus(); }
+      });
+    </script>
+  </body>
+</html>

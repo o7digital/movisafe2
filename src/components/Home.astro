@@ -1,0 +1,31 @@
+---
+import Layout from './Layout.astro';
+import Contact from './Contact.astro';
+import Icon from './Icon.astro';
+import {copy,servicePath,serviceImages,serviceIcons,type Lang} from '../data/content';
+interface Props {lang:Lang}
+const {lang}=Astro.props; const t=copy[lang];
+const stats=[['100','people'],['800','shield'],['5','globe'],['24/7','clock']];
+const brands=[['thales','Thales'],['moet-hennessy','Moët Hennessy'],['pernod-ricard','Pernod Ricard'],['econocom','Econocom']];
+---
+<Layout {lang}><main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <picture class="hero-art"><source media="(max-width: 680px)" srcset="/media/reforma-mobile.webp" /><img fetchpriority="high" src="/media/reforma.webp" width="1942" height="809" alt="" /></picture>
+    <div class="wrap hero-inner">
+      <div class="hero-copy"><p class="label on-dark">{t.kicker}</p>
+        <h1 id="hero-title">{t.hero[0]}<br /><em>{t.hero[1]}</em></h1>
+        <p class="lead">{t.lead}</p>
+        <div class="hero-actions"><a class="button primary" href="#contacto">{t.consult}</a><a class="textlink" href="#soluciones">{t.discover}</a></div>
+      </div>
+      <div class="caption"><Icon name="pin" size={15} /><span>{t.place}<i></i>{t.habitat}</span></div>
+    </div>
+  </section>
+  <section class="metrics" aria-label="Movisafe"><div class="wrap metric-grid">{stats.map(([value,icon],i)=><div class="metric"><Icon name={icon} size={28}/><div><div class="metric-value">{i<2&&<span>+</span>}{value}</div><div class="metric-label">{t.stats[i]}</div></div></div>)}</div></section>
+  <section class="services pad" id="soluciones"><div class="wrap">
+    <p class="label">{t.section}</p><div class="section-head"><h2>{t.servicesTitle[0]} <em>{t.servicesTitle[1]}</em></h2><p>{t.servicesIntro}</p></div>
+    <div class="service-list">{t.services.map((s,i)=><article class="service-card"><a class="card-link" href={servicePath(lang,i)}><div class={'card-photo card-photo-'+i}><img loading="lazy" src={'/media/'+serviceImages[i]+'.webp'} alt="" width="600" height="380" /></div><div class="card-heading"><Icon name={serviceIcons[i]} size={24}/><h3>{s.name}</h3></div><p>{s.short}</p><span class="card-go">{t.read}<span class="plus" aria-hidden="true">+</span></span></a></article>)}</div>
+  </div></section>
+  <section id="empresa" class="firm pad"><div class="wrap firm-grid"><div class="firm-photo"><img loading="lazy" src="/media/empresa.webp" width="900" height="650" alt={t.firmImage} /></div><div class="firm-info"><p class="label">{t.firm}</p><h2>{t.firmTitle[0]}<br /><em>{t.firmTitle[1]}</em></h2><p>{t.firmBody}</p><p>{t.firmSecond}</p></div></div></section>
+  <section id="clientes" class="clients"><div class="wrap"><p class="label">{t.trust}</p><h2>{t.trustTitle}</h2><div class="brands" aria-label={t.clientAlt}>{brands.map(([f,n])=><img width="170" height="50" loading="lazy" src={'/media/'+f+'.webp'} alt={n} />)}</div></div></section>
+  <Contact {lang}/>
+</main></Layout>

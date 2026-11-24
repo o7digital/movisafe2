@@ -1,0 +1,11 @@
+---
+import Layout from './Layout.astro';
+import Contact from './Contact.astro';
+import {copy,home,servicePath,serviceImages,type Lang} from '../data/content';
+interface Props {lang:Lang; index:number}
+const {lang,index}=Astro.props,t=copy[lang],s=t.services[index];
+---
+<Layout {lang} serviceIndex={index}><main id="main">
+<section class="detail-hero"><div class="detail-image"><img src={'/media/'+serviceImages[index]+'.webp'} alt="" /></div><div class="wrap"><div class="detail-copy"><a class="crumb" href={home(lang)+'#soluciones'}>{t.back}</a><h1>{s.name}</h1><p>{s.intro}</p><a class="button primary" href="#contacto">{t.consult}</a></div></div></section>
+<section class="scope pad"><div class="wrap scope-grid"><p class="label">{t.section}</p><div><h2>{t.scope}</h2><dl>{s.items.map(([name,desc])=><div><dt>{name}</dt><dd>{desc}</dd></div>)}</dl><div class="related"><strong>{t.related}</strong>{t.services.map((other,i)=>i!==index&&<a href={servicePath(lang,i)}>{other.name}</a>)}</div></div></div></section>
+<Contact {lang} subject={s.name}/></main></Layout>
